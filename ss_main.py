@@ -10,12 +10,11 @@ def FileSearch(path,word,dir_path):
     else:
         full_path = dir_path
 
-    cmd = "find {0} -type f -print | xargs grep '{1}'".format(full_path,word)
+    cmd = "find {0} -type f -print | xargs grep -n '{1}'".format(full_path,word)
     res = sp.Popen(cmd, shell=True, stdout=sp.PIPE)
     stdout,strerr = res.communicate()
     print(stdout)
-        
-        
+
 
 
 # args
