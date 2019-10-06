@@ -19,7 +19,7 @@ ss -d "." -s "SELECT"
 python is required
 
 ```
-.bashrc
+[.bashrc]
 
 alias ss="python your_path/ss/ss_main.py"
 
