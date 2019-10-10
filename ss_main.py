@@ -38,9 +38,14 @@ def data_arrange(stdout,keyword):
 
 
 
-def table_view(data):
-    table = AsciiTable(data)
-    print(table.table)
+def table_view(data,keyword):
+    if len(data) > 1:
+        table = AsciiTable(data)
+        print(table.table)
+    else:
+
+        err_message = termcolor.colored("\'"+keyword+"\'"+" did not hit", 'red')
+        print(err_message)
 
 
 
@@ -58,7 +63,7 @@ def FileSearch(path,word,dir_path):
     stdout,strerr = res.communicate()
     data_str = str(stdout)
     data_s = data_arrange(data_str,word)
-    table_view(data_s)
+    table_view(data_s,word)
 
 
 
