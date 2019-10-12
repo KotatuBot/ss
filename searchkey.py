@@ -77,7 +77,7 @@ class SearchKey():
                 blank = ""
                 for i in range(spach_count):
                     blank += " "
-                rpd = relative_path+":"+data_list[1] + blank +"-> "+strip_head
+                rpd = relative_path+":"+data_list[1] + blank +"| "+strip_head
                 tmp.append(rpd)
                 tmp.append(absolte_path)
                 data_all.append(tmp)
