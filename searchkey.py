@@ -1,7 +1,6 @@
 import re
 from terminaltables import AsciiTable
-from terminal import Terminal,InquirerControl
-from terminal2 import TEST
+from terminal import TerminalView
 import subprocess as sp
 import os
 import termcolor
@@ -44,13 +43,26 @@ class SearchKey():
                 data_all.append(tmp)
         return data_all
 
+    def max_counter(self,one_line):
+        current_path = os.environ['PWD']
+        tmp = []
+        for data in one_line:
+            data_list = data.split(":")
+            if len(data_list)==3:
+                strip_tab = data_list[2].replace("\\t","")
+                strip_head = re.sub(r"^\s+",'',strip_tab)
+                # append list
+                relative_path = data_list[0].replace(current_path,".")
+                tmp.append(len(relative_path+":"+data_list[1]))
+        max_length = max(tmp)
+        return max_length
+
     def mode_data(self,stdout):
 
         data_all = []
-        match_dict = {}
         current_path = os.environ['PWD']
         one_line = stdout.split("\\n")
-
+        max_length = self.max_counter(one_line)
         for data in one_line:
             data_list = data.split(":")
             if len(data_list)==3:
@@ -60,11 +72,17 @@ class SearchKey():
                 # append list
                 absolte_path = data_list[0]
                 relative_path = data_list[0].replace(current_path,".")
-                tmp.append(relative_path+":"+data_list[1])
+                relative_path_len = len(relative_path+":"+data_list[1])
+                spach_count = max_length - relative_path_len 
+                blank = ""
+                for i in range(spach_count):
+                    blank += " "
+                rpd = relative_path+":"+data_list[1] + blank +"-> "+strip_head
+                tmp.append(rpd)
                 tmp.append(absolte_path)
-                match_dict[relative_path+":"+data_list[1]] = strip_head
                 data_all.append(tmp)
-        return data_all,match_dict
+
+        return data_all
 
 
 
@@ -77,10 +95,10 @@ class SearchKey():
             err_message = termcolor.colored("\'"+keyword+"\'"+" did not hit", 'red')
             print(err_message)
 
-    def CommandTerminal(self,file_name,dict_name):
-        a = TEST(dict_name)
+    def CommandTerminal(self,file_name):
+        tv = TerminalView()
         while 1:
-            a.main(file_name)
+            tv.main(file_name)
             continue_key = input("Continue?[y/n]")
             if(continue_key == "n"):
                 break
@@ -97,12 +115,12 @@ class SearchKey():
         res = sp.Popen(cmd, shell=True, stdout=sp.PIPE)
         stdout,strerr = res.communicate()
         data_str = str(stdout)
-        data_s = self.data_arrange(data_str,word)
         if mode == "vim":
-            if len(data_s)!=0:
-                mode_file_data,mode_dict_data = self.mode_data(data_str)
-                self.CommandTerminal(mode_file_data,mode_dict_data)
+            if len(data_str)!=0:
+                mode_file_data = self.mode_data(data_str)
+                self.CommandTerminal(mode_file_data)
         else:
+            data_s = self.data_arrange(data_str,word)
             self.table_view(data_s,word)
 
 
