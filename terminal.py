@@ -74,7 +74,6 @@ class BufferCache:
     def get_or_append_buffer(self, buf_name, document_text):
         for i, b in enumerate(self._buffers):
             if b.name == buf_name:
-                # get
                 self._current_buffer_index = i
                 return b
 
