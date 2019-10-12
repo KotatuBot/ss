@@ -119,7 +119,6 @@ class TEST():
             cursorline=True,
         )
 
-        split_line = Window(width=1, char="|")
 
         txt_window = Window(
             BufferControl(
@@ -133,11 +132,10 @@ class TEST():
         )
 
         toolbar = FormattedTextToolbar(text="hello world!", style="class:buf_name")
-
+        
         body = HSplit(
-            [VSplit([lst_window, split_line, txt_window]), toolbar, search_toolbar]
+            [lst_window]
         )
-
         # Key bind
         kb = KeyBindings()
         kb.add(Keys.ControlD)(scroll_half_page_down)
@@ -161,9 +159,12 @@ class TEST():
             event.current_buffer.cursor_up()
             idx = event.current_buffer.document.cursor_position_row
             path = str(fr.get_relative_path(idx))
-            datas = self.dict_name["./"+ str(path)]
-            set_buffer_txt_window(bc.get_or_append_buffer(path, datas))
-            set_text_toolbar(bc.current_buffer_name)
+            try:
+               datas = self.dict_name["./"+ str(path)]
+               set_buffer_txt_window(bc.get_or_append_buffer(path, datas))
+               set_text_toolbar(bc.current_buffer_name)
+            except:
+               pass
 
 
         @kb.add("j")
