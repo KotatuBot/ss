@@ -16,10 +16,6 @@ from prompt_toolkit.styles.pygments import style_from_pygments_dict
 from pygments.token import Token
 import subprocess
 
-choices = ['ls', 'ifconfig', 'pwd', 'who']
-string_query = ' Command Select '
-inst = ' (Use arrow keys)'
-
 
 
 class InquirerControl(FormattedTextControl):
@@ -68,11 +64,14 @@ class TEST():
         self.ic = ic
 
     def selected_item(self,text):
-        res = subprocess.call(text)
+        command = "vim "+text
+        res = subprocess.call(command.split())
         print(res)
 
 
     def get_prompt_tokens(self):
+        string_query = ' ========================'
+        inst = '=========================================='
         tokens = []
         T = Token
         tokens.append((Token.QuestionMark, '?'))
@@ -101,19 +100,18 @@ class TEST():
 
 
         kb = KeyBindings()
-        @kb.add('c-q', eager=True)
-        @kb.add('c-c', eager=True)
+        @kb.add('q', eager=True)
         def _(event):
             event.app.exit(None)
-        @kb.add('down', eager=True)
+        @kb.add('j', eager=True)
         def move_cursor_down(event):
             self.ic.selected_option_index = (
                 (self.ic.selected_option_index + 1) % self.ic.choice_count)
-        @kb.add('up', eager=True)
+        @kb.add('k', eager=True)
         def move_cursor_up(event):
             self.ic.selected_option_index = (
                 (self.ic.selected_option_index - 1) % self.ic.choice_count)
-        @kb.add('enter', eager=True)
+        @kb.add('space', eager=True)
         def set_answer(event):
             self.ic.answered = True
             event.app.exit(None)
@@ -136,9 +134,13 @@ class TEST():
         )
         app.run()
 
+while 1:
+    choices = ['test.py', 'test2.py']
+    ic = InquirerControl(choices)
+    test = TEST(ic)
+    test.main()
+    test = input("Continue?[y/n]")
+    if (test=="n"):
+        break
 
-
-ic = InquirerControl(choices)
-test = TEST(ic)
-test.main()
 
