@@ -15,10 +15,13 @@ parser.add_argument('-m',help='open vim mode\n(example: -m vim)')
 args = parser.parse_args()
 
 
-if (args.d!=None and len(args.s)!=None and args.m==None):
+if (len(args.s)!=None and args.m==None):
+    if args.d == None:
+        args.d = "."
     sk.FileSearch(args.d,args.s,exe_cute_dir,"no") 
-
-elif (args.d!=None and len(args.s)!=None and args.m=="vim"):
+elif (len(args.s)!=None and args.m=="vim"):
+    if args.d == None:
+        args.d = "."
     sk.FileSearch(args.d,args.s,exe_cute_dir,"vim") 
 else:
     print("Please set an argument")
