@@ -46,9 +46,6 @@ class FileReader:
 
 
 class BufferCache:
-    """
-    Bufferのキャッシュクラス
-    """
 
     def __init__(self):
         self._current_buffer_index = 0
