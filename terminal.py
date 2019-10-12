@@ -146,7 +146,7 @@ class TerminalView():
             idx = event.current_buffer.document.cursor_position_row
             path = str(fr.get_path(idx))
             origin_data = str(fr.get_relative_path(idx))
-            origin_data2 = origin_data.split("->")[0]
+            origin_data2 = origin_data.split("|")[0]
             number = origin_data2.split(":")[-1]
             command = "vim "+"+"+number+" "+path
             res = subprocess.call(command.split())
