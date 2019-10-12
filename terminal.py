@@ -14,6 +14,10 @@ from prompt_toolkit.styles import Style
 from prompt_toolkit.styles import pygments_token_to_classname
 from prompt_toolkit.styles.pygments import style_from_pygments_dict
 from pygments.token import Token
+# add 
+from prompt_toolkit.buffer import Buffer
+from prompt_toolkit.layout.controls import BufferControl, FormattedTextControl
+from prompt_toolkit.key_binding.bindings.scroll import scroll_half_page_down, scroll_half_page_up
 import subprocess
 
 
@@ -58,7 +62,7 @@ class InquirerControl(FormattedTextControl):
         return self.choices[self.selected_option_index]
 
 
-class TEST():
+class Terminal():
 
     def __init__(self,ic):
         self.ic = ic
@@ -70,7 +74,7 @@ class TEST():
 
 
     def get_prompt_tokens(self):
-        string_query = ' ========================'
+        string_query = 'SELECT your file path\n'
         inst = '=========================================='
         tokens = []
         T = Token
@@ -83,11 +87,12 @@ class TEST():
             tokens.append((Token.Instruction, inst))
         return [('class:'+pygments_token_to_classname(x[0]), str(x[1])) for x in tokens]
 
-    def main(self):
-
+    def apps_m(self):
+        buffer1 = Buffer()
         HSContainer = HSplit([
             Window(height=D.exact(1),
                    content=FormattedTextControl(self.get_prompt_tokens)),
+            Window(content=BufferControl(buffer=buffer1)),
             ConditionalContainer(
                 Window(
                 self.ic,
@@ -100,6 +105,7 @@ class TEST():
 
 
         kb = KeyBindings()
+
         @kb.add('q', eager=True)
         def _(event):
             event.app.exit(None)
@@ -133,14 +139,4 @@ class TEST():
             style=inquirer_style
         )
         app.run()
-
-while 1:
-    choices = ['test.py', 'test2.py']
-    ic = InquirerControl(choices)
-    test = TEST(ic)
-    test.main()
-    test = input("Continue?[y/n]")
-    if (test=="n"):
-        break
-
 
