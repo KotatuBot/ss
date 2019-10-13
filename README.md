@@ -5,12 +5,24 @@ This command searches a specific string from a specific directory
 ## How to use
 
 ```
-ss -d "directory path" -s "Search keyword"
+sk -d "directory path" -s "Search keyword"
 
 [Example]
 
 
 ss -d "." -s "SELECT"
+
+
+ss -s "SELECT" -m vim
+
+
+[Example]
+
+gf 
+
+gf -m o
+
+gf -m s -s my_unserilaze
 ```
 
 
@@ -21,6 +33,6 @@ python is required
 ```
 [.bashrc]
 
-alias ss="python your_path/ss/ss_main.py"
-
+alias sk="python3 your_path/ss/sk/ss_main.py"
+alias gf="python3 your_path/ss/gf/gf.py"
 ```
