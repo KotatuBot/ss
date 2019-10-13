@@ -1,7 +1,11 @@
 import re
 import os
 import subprocess
+import termcolor
 from terminaltables import AsciiTable
+
+def paint_color(data,color):
+    return termcolor.colored(data,color)
 
 def get_file_list():
     cmd = "find . -type f -print"
@@ -88,9 +92,14 @@ def main():
             if len(user_func) == 0:
                 user_func.append("NULL")
 
+
+            file_name = paint_color(file_name,"red")
+            call_f = paint_color("\n".join(call_func),"green")
+            user_f = paint_color("\n".join(user_func),"blue")
+
             tmp.append(file_name)
-            tmp.append("\n".join(call_func))
-            tmp.append("\n".join(user_func))
+            tmp.append(call_f)
+            tmp.append(user_f)
             all_list.append(tmp)
 
     table = AsciiTable(all_list)
