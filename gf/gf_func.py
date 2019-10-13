@@ -78,8 +78,39 @@ class GF_Func():
         return file_dict,call_func,user_func
 
 
+    def search_define(self,dict_data,function_name):
+        # function_name
+        source_name = []
+        regex = re.compile(function_name.strip("()")+"\(")
+        for sorce,value in dict_data.items():
+            for value2 in value['Define_Func']:
+                test = regex.findall(value2)
+                if len(test) > 0:
+                    source_name.append(sorce)
+                    break
+        return source_name
 
-    def main(self,path,mode="Normal"):
+    def search_format(self,hit_source_name,function_name):
+
+        if len(hit_source_name) != 0:
+            head = []
+            body = []
+            all_table = []
+            head.append("[Function Name]")
+            head.append("[Define Source]")
+            body.append(function_name)
+            body.append(hit_source_name[0])
+            all_table.append(head)
+            all_table.append(body)
+            table = AsciiTable(all_table)
+            table.inner_row_border = True
+            print(table.table)
+
+        else:
+            print("No Hit Function")
+
+
+    def main(self,path,mode="Normal",func_name="None"):
         if path != ".":
             filter_file_list = []
             filter_file_list.append(path)
@@ -116,8 +147,15 @@ class GF_Func():
                 tmp.append(call_func_str)
                 tmp.append(user_func_str)
                 all_list.append(tmp)
+                all_file_dict[file_name] = file_dict
 
-        table = AsciiTable(all_list)
-        table.inner_row_border = True
-        print(table.table)
+        # View Table
+        if mode == "Normal":
+            table = AsciiTable(all_list)
+            table.inner_row_border = True
+            print(table.table)
+        elif mode == "Search":
+            hit_source = self.search_define(all_file_dict,func_name)
+            self.search_format(hit_source,func_name)
+
 
