@@ -109,6 +109,44 @@ class GF_Func():
         else:
             print("No Hit Function")
 
+    def view_table(self,dict_name,func_list):
+        func_all_list = []
+        new_table_list = []
+        for j in func_list:
+            for t in j:
+                ts = "".join(list(t)[1:])
+                func_all_list.append(ts.split("(")[0]+"()")
+
+        for source,value in dict_name.items():
+            call_func_list = []
+            for call_value in value['Call_Func']:
+                if call_value in func_all_list:
+                    create_func = call_value + " [M]"
+                else:
+                    create_func = call_value + " [O]"
+                call_func_list.append(create_func)
+            dict_name[source]['Call_Func'] = call_func_list
+
+        for source_name,values in dict_name.items():
+            tmp = []
+            call_func_unique = list(set(values['Call_Func']))
+            user_func_unique = list(set(values['Define_Func']))
+            call_func_str = "\n".join(call_func_unique)
+            user_func_str = "\n".join(user_func_unique)
+            tmp.append(source_name)
+            tmp.append(call_func_str)
+            tmp.append(user_func_str)
+
+            new_table_list.append(tmp)
+        table = AsciiTable(new_table_list)
+        table.inner_row_border = True
+        print(table.table)
+
+            
+
+                    
+
+
 
     def main(self,path,mode="Normal",func_name="None"):
         if path != ".":
@@ -119,6 +157,7 @@ class GF_Func():
             filter_file_list = self.filter_file(origin_file,"php")
         all_file_dict = {}
         all_list = []
+        user_all_list = []
         tmp = []
         tmp.append('File Name')
         tmp.append('Call FuncName')
@@ -149,6 +188,11 @@ class GF_Func():
                 all_list.append(tmp)
                 all_file_dict[file_name] = file_dict
 
+                if len(user_func) != 0 and mode=="Origin":
+                    user_all_list.append(user_func)
+
+
+
         # View Table
         if mode == "Normal":
             table = AsciiTable(all_list)
@@ -157,5 +201,8 @@ class GF_Func():
         elif mode == "Search":
             hit_source = self.search_define(all_file_dict,func_name)
             self.search_format(hit_source,func_name)
+        elif mode == "Origin":
+            self.view_table(all_file_dict,user_all_list)
+
 
 
