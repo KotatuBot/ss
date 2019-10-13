@@ -80,17 +80,19 @@ def main():
         tmp = []
         file_dict,call_func,user_func = split_function(file_name)
 
-        all_file_dict[file_name]=file_dict
+        #all_file_dict[file_name]=file_dict
+        call_func2 = list(set(call_func))
+        user_func2 = list(set(user_func))
 
         if (len(call_func)!=0 and len(call_func)!= 0):
-            if len(call_func) == 0:
-                call_func.append("NULL")
-            if len(user_func) == 0:
-                user_func.append("NULL")
+            if len(call_func2) == 0:
+                call_func2.append("NULL")
+            if len(user_func2) == 0:
+                user_func2.append("NULL")
 
             tmp.append(file_name)
-            tmp.append("\n".join(call_func))
-            tmp.append("\n".join(user_func))
+            tmp.append("\n".join(call_func2))
+            tmp.append("\n".join(user_func2))
             all_list.append(tmp)
 
     table = AsciiTable(all_list)
