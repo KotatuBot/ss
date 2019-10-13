@@ -1,6 +1,7 @@
 import re
 import os
 import subprocess
+from terminaltables import AsciiTable
 
 def get_file_list():
     cmd = "find . -type f -print"
@@ -62,23 +63,37 @@ def split_function(file_name):
 
     file_dict['Call_Func'] = call_func
     file_dict['Define_Func'] = user_func
-    return file_dict
+    return file_dict,call_func,user_func
 
 
 def main():
     origin_file = get_file_list()
     filter_file_list = filter_file(origin_file,"php")
     all_file_dict = {}
+    all_list = []
+    tmp = []
+    tmp.append('File Name')
+    tmp.append('Call FuncName')
+    tmp.append('Define FuncName')
+    all_list.append(tmp)
     for file_name in filter_file_list:
-        file_dict = split_function(file_name)
+        tmp = []
+        file_dict,call_func,user_func = split_function(file_name)
+
         all_file_dict[file_name]=file_dict
 
+        if (len(call_func)!=0 and len(call_func)!= 0):
+            if len(call_func) == 0:
+                call_func.append("NULL")
+            if len(user_func) == 0:
+                user_func.append("NULL")
 
-    for source,value in all_file_dict.items():
-        if (len(value['Call_Func'])!=0 or len(value['Define_Func'])!=0):
-            print("Source Path: "+source)
-            print("Call_Func: "+",".join(value['Call_Func']))
-            print("Define_Func: "+",".join(value['Define_Func']))
-            print("--------")
+            tmp.append(file_name)
+            tmp.append("\n".join(call_func))
+            tmp.append("\n".join(user_func))
+            all_list.append(tmp)
+
+    table = AsciiTable(all_list)
+    print(table.table)
 
 main()
