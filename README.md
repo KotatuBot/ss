@@ -33,6 +33,6 @@ python is required
 ```
 [.bashrc]
 
-alias sk="python3 your_path/ss/sk/ss_main.py"
+alias sk="python3 your_path/ss/sk/sk_main.py"
 alias gf="python3 your_path/ss/gf/gf.py"
 ```
